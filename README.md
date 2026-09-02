@@ -6,6 +6,7 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org)
 [![arXiv](https://img.shields.io/badge/arXiv-2608.26263-b31b1b.svg)](https://arxiv.org/abs/2608.26263)
 [![Hermes Agent plugin](https://img.shields.io/badge/Hermes%20Agent-plugin-green.svg)](https://hermes-agent.nousresearch.com/docs)
+![topics](https://img.shields.io/badge/topics-skill--state_%7C_execution--state_%7C_state--transition_%7C_agent--runtime-informational)
 
 ## What it does
 
