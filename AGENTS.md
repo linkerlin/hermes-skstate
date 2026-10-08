@@ -58,6 +58,7 @@ hermes-agent/
 │   └── platforms/        # Adapters: telegram, discord, slack, whatsapp, homeassistant, signal, qqbot
 ├── acp_adapter/          # ACP server (VS Code / Zed / JetBrains integration)
 ├── cron/                 # Scheduler (jobs.py, scheduler.py)
+├── skstate/              # SKILL.state MCP runtime: one instrument, no LLM, no Hermes imports
 ├── environments/         # RL training environments (Atropos)
 ├── tests/                # Pytest suite (~3000 tests)
 └── batch_runner.py       # Parallel batch processing
@@ -456,6 +457,12 @@ def profile_env(tmp_path, monkeypatch):
 
 ---
 
+## skstate (`skstate`, `python -m skstate`)
+
+`skstate/` is a standalone MCP runtime. It does not import Hermes and does not call an LLM. The IDE host is the model. The single instrument lives in `skstate/instrument.py`. MCP `instructions`, the `skstate_instrument` prompt, `skstate_boot`, and the Codex SessionStart hook all return that document. It is the host's operating procedure: the user's current message is the task; execution state is the skill procedure, the structured state, and the latest observation. `skstate_step` validates a JSON patch (null deletes a key) and leaves the saved state unchanged when the schema rejects the patch. The host executes `action` with its own tools, then `skstate_observe` replaces the observation.
+
+`skstate hooks --platform opencode|codex` installs session hooks under `--project-dir` (default cwd). Do not point that at this checkout. State lives in `SKSTATE_HOME` or `<project>/.skstate`. Skills load from `SKSTATE_SKILLS`, `<project>/skills`, and `<data_dir>/skills`. The `hermes` chat loop and `hermes mcp serve` messaging bridge stay in this repo and still call a model.
+
 ## Testing
 
 ```bash
@@ -465,6 +472,7 @@ python -m pytest tests/test_model_tools.py -q   # Toolset resolution
 python -m pytest tests/test_cli_init.py -q       # CLI config loading
 python -m pytest tests/gateway/ -q               # Gateway tests
 python -m pytest tests/tools/ -q                 # Tool-level tests
+python -m pytest tests/skstate -q -o addopts=    # skstate runtime (no xdist)
 ```
 
 Always run the full suite before pushing changes.

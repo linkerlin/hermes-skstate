@@ -11,7 +11,26 @@
   <a href="https://nousresearch.com"><img src="https://img.shields.io/badge/Built%20by-Nous%20Research-blueviolet?style=for-the-badge" alt="Built by Nous Research"></a>
 </p>
 
+**Start with `skstate` if you want the host-takeover runtime.** It is the standalone SKILL.state MCP server in [`skstate/`](skstate/) — one instrument prompt, no LLM calls, no Hermes dependencies. Two commands wire it into a project and the next session's first message runs under the instrument:
+
+```bash
+pip install -r requirements-skstate.txt   # only mcp + PyYAML
+python -m skstate setup --platform opencode   # from your project root; or --platform codex
+```
+
+From zero to the first message, in Chinese: [README.zh.md](README.zh.md)（从零到 setup）.
+
+The Hermes product below stays in this repository for people who want the `hermes` chat loop, the messaging gateway, and the `hermes mcp serve` bridge.
+
 **The self-improving AI agent built by [Nous Research](https://nousresearch.com).** It's the only agent with a built-in learning loop — it creates skills from experience, improves them during use, nudges itself to persist knowledge, searches its own past conversations, and builds a deepening model of who you are across sessions. Run it on a $5 VPS, a GPU cluster, or serverless infrastructure that costs nearly nothing when idle. It's not tied to your laptop — talk to it from Telegram while it works on a cloud VM.
+
+中文说明：[README.zh.md](README.zh.md)。
+
+### Host takeover (`skstate`)
+
+`skstate` is a standalone MCP server. Its instructions are one instrument prompt, and that document is the host's operating procedure (OpenCode, Codex, and any other MCP client). The server keeps the skill procedure, structured execution state, and the latest observation. It does not call an LLM and does not import the Hermes chat loop. Wire-up is one command — `python -m skstate setup --platform opencode|codex` (MCP config, session hooks, gitignore rule); `skstate status`, `skstate doctor`, and `skstate skill new/check` cover the rest. The `hermes` command and `hermes mcp serve` still call a model. Details: [README.zh.md](README.zh.md).
+
+**Repositories.** `origin` is this fork (`linkerlin/hermes-skstate`); `upstream` is Nous Research's `hermes-agent`. `skstate` does not evolve with upstream's chat loop. The commands merged so far are stages 1–4 of the plan in [演进方案.md](演进方案.md); they will be published on the `skstate` branch.
 
 Use any model you want — [Nous Portal](https://portal.nousresearch.com), [OpenRouter](https://openrouter.ai) (200+ models), [Xiaomi MiMo](https://platform.xiaomimimo.com), [z.ai/GLM](https://z.ai), [Kimi/Moonshot](https://platform.moonshot.ai), [MiniMax](https://www.minimax.io), [Hugging Face](https://huggingface.co), OpenAI, or your own endpoint. Switch with `hermes model` — no code changes, no lock-in.
 
